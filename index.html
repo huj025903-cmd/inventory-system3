@@ -1730,9 +1730,7 @@ function renderDashboard(){
   const alr=DB.products.filter(p=>getTotalStock(p.id)<(p.safeQty||0));
   document.getElementById('m-alr').textContent=alr.length;
   const al=document.getElementById('alertList');
-  al.innerHTML=alr.length?alr.map(p=>`<div class="alert alert-danger" style="padding:5px 8px;font-size:10px">⚠ ${p.name}：库存 ${getTotalStock(p.id)} &lt;
-  mc.style.display='block';mc.style.pointerEvents='all';
-  document.body.style.overflow='hidden'; 安全库存 ${p.safeQty}</div>`).join(''):'<p style="font-size:11px;color:var(--color-text-tertiary)">暂无预警</p>';
+  al.innerHTML=alr.length?alr.map(p=>`<div class="alert alert-danger" style="padding:5px 8px;font-size:10px">⚠ ${p.name}：库存 ${getTotalStock(p.id)} &lt; 安全库存 ${p.safeQty}</div>`).join(''):'<p style="font-size:11px;color:var(--color-text-tertiary)">暂无预警</p>';
   const colors=['#378ADD','#1D9E75','#D85A30','#BA7517','#D4537E','#639922'];
   // 按产品类别汇总库存数量
   const catMap={};
