@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>进销存管理系统</title>
+<title>进销存管理系统 v2.0-0430-0723</title>
 <style>
 /* ── 系统设置：主题颜色变量覆盖 ── */
 body[data-theme="light"]{
@@ -973,6 +973,7 @@ function showApp(){
   if(nameEl)nameEl.textContent=currentLoginUser.name;
   if(roleEl)roleEl.textContent=ROLE_NAMES[currentLoginUser.role]||currentLoginUser.role;
   updateNavVis();renderDashboard();
+  console.log("[系统] 已加载 v2.0-0430-0723，如看到此消息说明是最新版本");
 }
 
 async function checkSession(){
