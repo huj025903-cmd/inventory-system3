@@ -1141,7 +1141,7 @@ function openSysSettings(){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
 }
 
 function setSysTheme(theme){
@@ -1322,7 +1322,7 @@ function changePasswordModal(){
   const mc=document.getElementById('modalContainer');
   _openMC();
   mc.innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal" style="width:360px"><div class="modal-header"><span>🔑 修改密码</span><button class="btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="form-group" style="margin-bottom:10px"><label>当前密码</label><input id="cpOld" type="password"></div><div class="form-group" style="margin-bottom:10px"><label>新密码（至少4位）</label><input id="cpNew" type="password"></div><div class="form-group"><label>确认新密码</label><input id="cpNew2" type="password"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="doChangePassword()">确认修改</button></div></div></div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden';
 }
 
@@ -1367,7 +1367,7 @@ function openAddUserModal(userData){
     ${!isEdit?'<div class="form-group" style="margin-top:8px"><label>初始密码</label><input id="uPwd" value="123456" placeholder="初始密码"></div>':''}
     <div class="alert alert-info" style="margin-top:10px;font-size:10px">管理员(全权) / 采购员 / 销售员 / 仓库员 / 财务(查看导出) / 只读</div>
   </div><div class="modal-footer"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveUser('${isEdit?userData.id:''}')">${isEdit?'保存':'创建'}</button></div></div></div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden';
   if(isEdit){document.getElementById('uRole').value=userData.role;document.getElementById('uActive').value=String(userData.active);}
 }
@@ -1730,7 +1730,7 @@ function renderDashboard(){
   document.getElementById('m-alr').textContent=alr.length;
   const al=document.getElementById('alertList');
   al.innerHTML=alr.length?alr.map(p=>`<div class="alert alert-danger" style="padding:5px 8px;font-size:10px">⚠ ${p.name}：库存 ${getTotalStock(p.id)} &lt;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden'; 安全库存 ${p.safeQty}</div>`).join(''):'<p style="font-size:11px;color:var(--color-text-tertiary)">暂无预警</p>';
   const colors=['#378ADD','#1D9E75','#D85A30','#BA7517','#D4537E','#639922'];
   // 按产品类别汇总库存数量
@@ -2376,7 +2376,7 @@ function _openMC(){
   var mc=document.getElementById('modalContainer');
   if(!mc) return mc;
   mc.style.display='block';
-  mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden';
   return mc;
 }
@@ -2660,7 +2660,7 @@ function openModal(type,data){
     setTimeout(()=>{ asmAddRow(); }, 50);
   }
   mc.innerHTML=html;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden';
   if(isMobile&&isMobile()){setTimeout(()=>{ const f=mc.querySelector('input,select,textarea'); if(f)f.focus(); },200);}
 }
@@ -3484,7 +3484,7 @@ function openBatchPRModal(preIds){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   // 预勾选
   if(preIds&&preIds.length){
     setTimeout(()=>{
@@ -3586,7 +3586,7 @@ function openBatchSDModal(preIds){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   if(preIds&&preIds.length){
     setTimeout(()=>{
       preIds.forEach(id=>{
@@ -3675,7 +3675,7 @@ function openBatchOIModal(){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   addBOIRow(); addBOIRow();
 }
 
@@ -4145,7 +4145,7 @@ function viewBill(type,id){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden';
 }
 
@@ -4348,7 +4348,7 @@ function editBill(type, id){
       </div>
     </div>
   </div>`;
-  mc.style.pointerEvents = 'all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow = 'hidden';
 
   // 渲染现有明细行
@@ -4789,7 +4789,7 @@ function editRemark(store, id, renderFn){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
   document.body.style.overflow='hidden';
   // store renderFn reference
   document.getElementById('remarkInput').dataset.store = store;
@@ -5495,7 +5495,7 @@ function editBOM(id){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
 }
 
 function saveBOMEdit(id){
@@ -5566,7 +5566,7 @@ function editAssembly(id){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
 }
 
 function saveAssemblyEdit(id){
@@ -5727,7 +5727,7 @@ function editBOM(id){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
 }
 
 function saveBOMEdit(id){
@@ -5797,7 +5797,7 @@ function editAssembly(id){
       </div>
     </div>
   </div>`;
-  mc.style.display='block';mc.style.display='block';mc.style.pointerEvents='all';
+  mc.style.display='block';mc.style.pointerEvents='all';
 }
 
 function saveAssemblyEdit(id){
