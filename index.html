@@ -888,16 +888,8 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
       </div>
 
 
-<div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:10001;
-  padding:12px 20px;border-radius:8px;border:1.5px solid #C0DD97;
-  background:var(--color-background-primary);box-shadow:0 4px 16px rgba(0,0,0,0.12);
-  display:flex;align-items:center;gap:10px;font-size:13px;
-  transition:opacity 0.3s,transform 0.3s;opacity:0;transform:translateY(8px);
-  pointer-events:none">
-  <span id="toastIcon" style="font-size:15px;font-weight:700">✓</span>
-  <span id="toastMsg"></span>
-</div>
-<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:10000"></div>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 
@@ -5920,5 +5912,16 @@ function autoFillCode(input){
 init();
 
 </script>
+
+<div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:10001;
+  padding:12px 20px;border-radius:8px;border:1.5px solid #C0DD97;
+  background:var(--color-background-primary);box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  display:flex;align-items:center;gap:10px;font-size:13px;
+  transition:opacity 0.3s,transform 0.3s;opacity:0;transform:translateY(8px);
+  pointer-events:none">
+  <span id="toastIcon" style="font-size:15px;font-weight:700">✓</span>
+  <span id="toastMsg"></span>
+</div>
+<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:10000"></div>
 </body>
 </html>
