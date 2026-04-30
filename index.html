@@ -897,7 +897,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
   <span id="toastIcon" style="font-size:15px;font-weight:700">✓</span>
   <span id="toastMsg"></span>
 </div>
-<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:1000"></div>
+<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:10000"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 
@@ -1582,9 +1582,15 @@ function startPolling(){
           if(newJson!==oldJson){DB[row.store_name]=row.data||[];changed=true;}
         }
       }
-      if(changed){renderPage(currentPage);renderDashboard();showToast('数据已从云端更新','success');}
+      if(changed){
+          // 弹窗开着时不刷新，避免打断用户操作
+          var mc=document.getElementById('modalContainer');
+          var modalOpen=mc&&mc.style.display==='block';
+          if(!modalOpen){renderPage(currentPage);renderDashboard();}
+          showToast('数据已从云端更新','success');
+        }
     }catch(e){}
-  },30000);
+  },60000);
 }
 
 function updateDBInfo(){
@@ -1692,6 +1698,9 @@ function updateNavVis(){
 }
 
 function renderPage(p){
+  // 弹窗开着时跳过渲染，避免打断用户操作
+  var _mc=document.getElementById('modalContainer');
+  if(_mc&&_mc.style.display==='block') return;
   switch(p){
     case 'dashboard':renderDashboard();break;
     case 'products':renderProducts();break;
