@@ -1672,6 +1672,10 @@ function getCustOpts(sel=''){return DB.customers.map(c=>`<option value="${c.id}"
 
 /* ── Navigation ── */
 function nav(page){
+  // 페이지 전환 시 혹시 열린 모달이 있으면 닫기
+  var _mc=document.getElementById('modalContainer');
+  if(_mc){_mc.style.display='none';_mc.style.pointerEvents='none';_mc.innerHTML='';}
+  document.body.style.overflow='';
   if(perms[page]&&!perms[page][currentUser]){showToast('您没有访问该页面的权限','error');return;}
   currentPage=page;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1692,9 +1696,6 @@ function updateNavVis(){
 }
 
 function renderPage(p){
-  // 弹窗开着时跳过渲染，避免打断用户操作
-  var _mc=document.getElementById('modalContainer');
-  if(_mc&&_mc.style.display==='block') return;
   switch(p){
     case 'dashboard':renderDashboard();break;
     case 'products':renderProducts();break;
@@ -2366,7 +2367,17 @@ function editItem(store,id){
 }
 
 /* ── Modals ── */
-function closeModal(){console.log('[closeModal called]', new Error().stack.split('\n')[2]);const mc=document.getElementById('modalContainer');mc.innerHTML='';mc.style.display='none';mc.style.pointerEvents='none';document.body.style.overflow='';}
+function closeModal(){
+  var mc=document.getElementById('modalContainer');
+  if(!mc) return;
+  mc.innerHTML='';
+  mc.style.display='none';
+  mc.style.pointerEvents='none';
+  mc.style.zIndex='';
+  document.body.style.overflow='';
+  // 确保所有 modal overlay 都被清除
+  document.querySelectorAll('.__modal_overlay').forEach(function(el){el.remove();});
+}
 
 function addLine(cid){
   const c=document.getElementById(cid);const div=document.createElement('div');div.className='form-row c3';div.style.marginBottom='6px';
