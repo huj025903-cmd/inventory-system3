@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>进销存管理系统</title>
+<title>进销存管理系统 v3.0-0509-0329</title>
 <style>
 /* ── 系统设置：主题颜色变量覆盖 ── */
 body[data-theme="light"]{
@@ -386,6 +386,9 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
 
 #toast.show{opacity:1;transform:translateY(0);}
 #toast.show{opacity:1 !important;transform:translateY(0) !important;}
+
+.table-wrap{overflow-x:auto;width:100%;}
+.table-wrap table{min-width:600px;}
 </style>
 </head>
 <body>
@@ -606,7 +609,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
           <div class="card-header"><div class="card-title">采购订单</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-warning" onclick="batchGenPR()" title="批量勾选后生成入库单">📥 批量生成入库单</button><button class="btn" onclick="batchPrint('po')">🖨️ 批量打印</button><button class="btn btn-success" onclick="exportExcel('po')">📊 导出Excel</button><button class="btn btn-primary" onclick="openModal('po')">+ 新建</button></div></div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 16px;background:var(--color-background-secondary);border-radius:6px;margin:0 16px 10px;border:1px solid var(--color-border-secondary)"><input id="poFltFrom" type="date" onchange="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary)" title="开始日期"><span style="font-size:11px;color:var(--color-text-secondary)">至</span><input id="poFltTo" type="date" onchange="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary)" title="结束日期"><input id="poFltNo" type="text" placeholder="单号" oninput="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);width:110px" title="单号搜索"><input id="poFltQ" type="text" placeholder="商品名称/编号" oninput="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);width:150px"><select id="poFltSup" onchange="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);min-width:120px;cursor:pointer"><option value="">全部供应商</option></select><button onclick="document.getElementById('poFltFrom').value='';document.getElementById('poFltTo').value='';document.getElementById('poFltNo').value='';document.getElementById('poFltQ').value='';document.getElementById('poFltSup').value='';poApplyFilter()" style="height:30px;padding:0 12px;border-radius:5px;border:1px solid var(--color-border-secondary);font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)">重置</button><div id="poSummary" style="margin-left:auto;font-size:12px;font-weight:600;color:#185FA5;white-space:nowrap"></div></div>
           <div class="table-wrap">
-            <table><thead><tr><th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('po',this)" title="全选"></th><th>单号</th><th>供应商</th><th>经办人</th><th>日期</th><th>商品编码</th><th>商品名称</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">行金额</th><th style="text-align:right">订单金额</th><th>入库仓库</th><th>入库仓库</th><th>到货</th><th>审核</th><th>备注</th><th>操作</th></tr></thead><tbody id="poTbl"></tbody></table>
+            <table><thead><tr><th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('po',this)" title="全选"></th><th>单号</th><th>供应商</th><th>经办人</th><th>日期</th><th>商品编码</th><th>商品名称</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">行金额</th><th style="text-align:right">订单金额</th><th>入库仓库</th><th>到货</th><th>审核</th><th>备注</th><th>操作</th></tr></thead><tbody id="poTbl"></tbody></table>
           </div>
         </div>
       </div>
@@ -886,10 +889,8 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
         </div>
       </div>
 <div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:10001;padding:12px 20px;border-radius:8px;border:1.5px solid #C0DD97;background:var(--color-background-primary);box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:10px;font-size:13px;transition:opacity 0.3s,transform 0.3s;opacity:0;transform:translateY(8px);pointer-events:none"><span id="toastIcon" style="font-size:15px;font-weight:700">✓</span><span id="toastMsg"></span></div>
-<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:2147483647"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
-const SUPABASE_URL='https://vythjeptvpyorstgtkuk.supabase.co';
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></scconst SUPABASE_URL='https://vythjeptvpyorstgtkuk.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5dGhqZXB0dnB5b3JzdGd0a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjcwMTQsImV4cCI6MjA5MTk0MzAxNH0.vjfzZrQ4nL6iaYGkqjblcd-FaR6qFyLT-X-SvH5ln1c';
 let restoreObj=null;
 let _syncChannel=null;
@@ -960,7 +961,7 @@ function showApp(){
   if(nameEl)nameEl.textContent=currentLoginUser.name;
   if(roleEl)roleEl.textContent=ROLE_NAMES[currentLoginUser.role]||currentLoginUser.role;
   updateNavVis();renderDashboard();
-  console.log("[系统] 已加载 v2.0-0430-0723，如看到此消息说明是最新版本");
+  console.log("[系统] 已加载 v3.0-0509-0329，登录正常");
 }
 
 async function checkSession(){
@@ -2065,11 +2066,7 @@ function _renderPORows(data){
       const poPR=DB.pr.find(function(pr){return pr.poId===r.id||pr.poNo===r.no;});
       const poWH=poPR?wname(poPR.warehouseId):'-';
       tr+=`<td style="font-size:11px;border-bottom:0.5px solid var(--color-border-tertiary)">${poWH}</td>`;
-            // 入库仓库：从关联PR反查
-      const _poPR=DB.pr.find(function(x){return x.poId===r.id||x.poNo===r.no;});
-      const _poWH=_poPR?wname(_poPR.warehouseId):'-';
-      tr+=`<td style="font-size:11px;border-bottom:0.5px solid var(--color-border-tertiary)">${_poWH}</td>`;
-tr+=`<td style="border-bottom:0.5px solid var(--color-border-tertiary)"><span class="badge badge-${r.arriveStatus==='done'?'green':r.arriveStatus==='partial'?'amber':'blue'}">${r.arriveStatus==='done'?'全部到货':r.arriveStatus==='partial'?'部分到货':'未到货'}</span></td>`;
+            // 入库仓库：从关联PR反查tr+=`<td style="border-bottom:0.5px solid var(--color-border-tertiary)"><span class="badge badge-${r.arriveStatus==='done'?'green':r.arriveStatus==='partial'?'amber':'blue'}">${r.arriveStatus==='done'?'全部到货':r.arriveStatus==='partial'?'部分到货':'未到货'}</span></td>`;
       tr+=`<td style="border-bottom:0.5px solid var(--color-border-tertiary)"><span class="badge badge-${r.approved?'green':'amber'}">${r.approved?'已审核':'待审核'}</span></td>`;
       tr+=`<td style="font-size:10px;border-bottom:0.5px solid var(--color-border-tertiary)">${r.remark||'-'}</td>`;
       tr+=`<td style="white-space:nowrap;border-bottom:0.5px solid var(--color-border-tertiary)">`+
@@ -5964,7 +5961,7 @@ function autoFillCode(input){
 }
 
 init();
-
 </script>
+<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:2147483647"></div>
 </body>
 </html>
