@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>进销存管理系统 v2.0-0430-0723</title>
+<title>进销存管理系统</title>
 <style>
 /* ── 系统设置：主题颜色变量覆盖 ── */
 body[data-theme="light"]{
@@ -390,7 +389,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
 </style>
 </head>
 <body>
-<div id="loginScreen" style="display:none;position:fixed;inset:0;background:var(--color-background-tertiary);z-index:9999;display:flex;align-items:center;justify-content:center">
+<div id="loginScreen" style="position:fixed;inset:0;background:var(--color-background-tertiary);z-index:2147483646;align-items:center;justify-content:center;display:none">
   <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:32px 36px;width:340px;box-shadow:0 4px 24px rgba(0,0,0,.12)">
     <div style="text-align:center;margin-bottom:24px">
       <div style="font-size:32px;margin-bottom:8px">📦</div>
@@ -886,11 +885,11 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
           </div>
         </div>
       </div>
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.minconst SUPABASE_URL='https://vythjeptvpyorstgtkuk.supabase.co';
+<div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:10001;padding:12px 20px;border-radius:8px;border:1.5px solid #C0DD97;background:var(--color-background-primary);box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:10px;font-size:13px;transition:opacity 0.3s,transform 0.3s;opacity:0;transform:translateY(8px);pointer-events:none"><span id="toastIcon" style="font-size:15px;font-weight:700">✓</span><span id="toastMsg"></span></div>
+<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:2147483647"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const SUPABASE_URL='https://vythjeptvpyorstgtkuk.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5dGhqZXB0dnB5b3JzdGd0a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjcwMTQsImV4cCI6MjA5MTk0MzAxNH0.vjfzZrQ4nL6iaYGkqjblcd-FaR6qFyLT-X-SvH5ln1c';
 let restoreObj=null;
 let _syncChannel=null;
@@ -5965,17 +5964,7 @@ function autoFillCode(input){
 }
 
 init();
-</script>
 
-<div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:10001;
-  padding:12px 20px;border-radius:8px;border:1.5px solid #C0DD97;
-  background:var(--color-background-primary);box-shadow:0 4px 16px rgba(0,0,0,0.12);
-  display:flex;align-items:center;gap:10px;font-size:13px;
-  transition:opacity 0.3s,transform 0.3s;opacity:0;transform:translateY(8px);
-  pointer-events:none">
-  <span id="toastIcon" style="font-size:15px;font-weight:700">✓</span>
-  <span id="toastMsg"></span>
-</div>
-<div id="modalContainer" style="display:none;position:fixed;inset:0;z-index:2147483647"></div>
+</script>
 </body>
 </html>
