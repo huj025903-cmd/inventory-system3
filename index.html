@@ -750,7 +750,9 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
       <!-- 库存查询 -->
       <div class="page" id="page-stockQuery">
         <div class="card">
-          <div class="card-header"><div class="card-title">📦 库存收发查询</div></div>
+          <div class="card-header">
+            <div class="card-title">📦 库存收发查询</div>
+          </div>
           <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
             <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
               <input placeholder="商品编号，如 SP0400397 或 SP04..." id="sqCode" oninput="renderSQ()" style="flex:1.2;min-width:180px">
@@ -759,16 +761,17 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
             </div>
             <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
               <label style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">日期区间：</label>
-              <input type="date" id="sqDateFrom" onchange="renderSQ()" style="min-width:130px" title="开始日期">
+              <input type="date" id="sqDateFrom" onchange="renderSQ()" style="min-width:130px">
               <span style="font-size:11px;color:var(--color-text-secondary)">至</span>
-              <input type="date" id="sqDateTo" onchange="renderSQ()" style="min-width:130px" title="结束日期">
+              <input type="date" id="sqDateTo" onchange="renderSQ()" style="min-width:130px">
               <button class="btn btn-primary" onclick="renderSQ()" style="white-space:nowrap">🔍 查询</button>
               <button class="btn" onclick="sqClearAll()" style="white-space:nowrap">清空</button>
               <button class="btn btn-success" onclick="exportSQExcel()" style="white-space:nowrap">📊 导出Excel</button>
             </div>
           </div>
-          <div id="sqSummary" style="display:none;margin:8px 0;padding:8px 12px;background:var(--color-background-secondary);border-radius:6px;font-size:11px;display:flex;gap:20px;flex-wrap:wrap"></div>
-          <table id="sqTable"><thead>
+          <div id="sqSummary" style="display:none;margin:8px 0;padding:8px 12px;background:var(--color-background-secondary);border-radius:6px;font-size:11px;gap:20px;flex-wrap:wrap"></div>
+          <div class="table-wrap">
+            <table><thead>
   <tr>
     <th rowspan="2">商品编码</th><th rowspan="2">商品名称</th><th rowspan="2">规格</th><th rowspan="2">单位</th><th rowspan="2">仓库</th>
     <th colspan="2" style="text-align:center;border-bottom:1px solid var(--color-border-secondary)">期初</th>
@@ -784,10 +787,11 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
     <th style="text-align:right">数量</th><th style="text-align:right;color:#185FA5">金额</th>
   </tr>
 </thead><tbody id="sqTbl"></tbody></table>
+          </div>
         </div>
       </div>
 
-      <!-- Excel导出中心 -->
+            <!-- Excel导出中心 -->
       <div class="page" id="page-export">
         <div class="card">
           <div class="card-header"><div class="card-title">Excel 导出中心</div></div>
@@ -5209,7 +5213,7 @@ function renderSQ(){
       const inAmt=fmtNum(inQty*cp);
       const outAmt=fmtNum(outQty*cp);
       const endAmt=fmtNum(endQty*cp);
-      if(openQty||inQty||outQty||endQty>0){
+      if(true){ // 所有商品均显示（含零库存）
         rows.push({p,w,openQty,inQty,outQty,endQty,openAmt,inAmt,outAmt,endAmt,safe:p.safeQty||0});
       }
     });
@@ -5251,7 +5255,7 @@ function renderSQ(){
       <td style="text-align:right;font-size:11px;font-weight:600;color:#185FA5">${fmtMoney(r.endAmt)}</td>
       <td><span class="badge ${endStatus}">${r.endQty<=0?'零库存':r.endQty<=safe?'低库存':'正常'}</span></td>
     </tr>`;
-  }).join('')||'<tr><td colspan="14" style="text-align:center;color:var(--color-text-tertiary)">暂无数据，请调整筛选条件</td></tr>';
+  }).join('')||'<tr><td colspan="14" style="text-align:center;padding:20px;color:var(--color-text-tertiary)">暂无库存数据，请先录入期初库存或入库单</td></tr>';
 }
 
 function sqClearAll(){
