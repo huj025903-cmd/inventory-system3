@@ -707,12 +707,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
               <button class="btn btn-primary" onclick="openModal('transfer')">+ 新建调拨单</button>
             </div>
           </div>
-          </div>
-      </div>
-      </div>
-      </div>
-      </div>
-      <div class="table-wrap">
+          <div class="table-wrap">
             <table><thead><tr>
               <th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('transfer',this)" title="全选"></th>
               <th>调拨单号</th><th>调出仓库</th><th>调入仓库</th><th>经办人</th><th>日期</th>
@@ -724,7 +719,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
         </div>
       </div>
 
-      <!-- 其他出库 -->
+            <!-- 其他出库 -->
       <div class="page" id="page-otherOut">
         <div class="card">
           <div class="card-header"><div class="card-title">其他出库单</div><div style="display:flex;gap:6px"><button class="btn btn-success" onclick="exportExcel('otherOut')">📊 导出Excel</button><button class="btn btn-primary" onclick="openModal('otherOut')">+ 新建</button></div></div>
