@@ -607,7 +607,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
           <div class="card-header"><div class="card-title">采购订单</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-warning" onclick="batchGenPR()" title="批量勾选后生成入库单">📥 批量生成入库单</button><button class="btn" onclick="batchPrint('po')">🖨️ 批量打印</button><button class="btn btn-success" onclick="exportExcel('po')">📊 导出Excel</button><button class="btn btn-primary" onclick="openModal('po')">+ 新建</button></div></div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 16px;background:var(--color-background-secondary);border-radius:6px;margin:0 16px 10px;border:1px solid var(--color-border-secondary)"><input id="poFltFrom" type="date" onchange="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary)" title="开始日期"><span style="font-size:11px;color:var(--color-text-secondary)">至</span><input id="poFltTo" type="date" onchange="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary)" title="结束日期"><input id="poFltNo" type="text" placeholder="单号" oninput="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);width:110px" title="单号搜索"><input id="poFltQ" type="text" placeholder="商品名称/编号" oninput="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);width:150px"><select id="poFltSup" onchange="poApplyFilter()" style="height:30px;border:1px solid var(--color-border-secondary);border-radius:5px;padding:0 8px;font-size:12px;background:var(--color-background-primary);color:var(--color-text-primary);min-width:120px;cursor:pointer"><option value="">全部供应商</option></select><button onclick="document.getElementById('poFltFrom').value='';document.getElementById('poFltTo').value='';document.getElementById('poFltNo').value='';document.getElementById('poFltQ').value='';document.getElementById('poFltSup').value='';poApplyFilter()" style="height:30px;padding:0 12px;border-radius:5px;border:1px solid var(--color-border-secondary);font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)">重置</button><div id="poSummary" style="margin-left:auto;font-size:12px;font-weight:600;color:#185FA5;white-space:nowrap"></div></div>
           <div class="table-wrap">
-            <table><thead><tr><th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('po',this)" title="全选"></th><th>单号</th><th>供应商</th><th>经办人</th><th>日期</th><th>商品编码</th><th>商品名称</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">行金额</th><th style="text-align:right">订单金额</th><th>到货</th><th>审核</th><th>备注</th><th>操作</th></tr></thead><tbody id="poTbl"></tbody></table>
+            <table><thead><tr><th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('po',this)" title="全选"></th><th>单号</th><th>供应商</th><th>经办人</th><th>日期</th><th>商品编码</th><th>商品名称</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">行金额</th><th style="text-align:right">订单金额</th><th>入库仓库</th><th>入库仓库</th><th>到货</th><th>审核</th><th>备注</th><th>操作</th></tr></thead><tbody id="poTbl"></tbody></table>
           </div>
         </div>
       </div>
@@ -890,11 +890,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
-
-
-const SUPABASE_URL='https://vythjeptvpyorstgtkuk.supabase.co';
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.minconst SUPABASE_URL='https://vythjeptvpyorstgtkuk.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5dGhqZXB0dnB5b3JzdGd0a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjcwMTQsImV4cCI6MjA5MTk0MzAxNH0.vjfzZrQ4nL6iaYGkqjblcd-FaR6qFyLT-X-SvH5ln1c';
 let restoreObj=null;
 let _syncChannel=null;
@@ -2066,7 +2062,15 @@ function _renderPORows(data){
       tr+=`<td style="text-align:right;border-bottom:0.5px solid var(--color-border-tertiary)">${fmtMoney(i.price||0)}</td>`;
       tr+=`<td style="text-align:right;border-bottom:0.5px solid var(--color-border-tertiary)">${fmtMoney(i.total||0)}</td>`;
       tr+=`<td style="text-align:right;font-weight:600;border-bottom:0.5px solid var(--color-border-tertiary)">${fmtMoney(r.totalAmt)}</td>`;
-      tr+=`<td style="border-bottom:0.5px solid var(--color-border-tertiary)"><span class="badge badge-${r.arriveStatus==='done'?'green':r.arriveStatus==='partial'?'amber':'blue'}">${r.arriveStatus==='done'?'全部到货':r.arriveStatus==='partial'?'部分到货':'未到货'}</span></td>`;
+      // 入库仓库：从关联PR查
+      const poPR=DB.pr.find(function(pr){return pr.poId===r.id||pr.poNo===r.no;});
+      const poWH=poPR?wname(poPR.warehouseId):'-';
+      tr+=`<td style="font-size:11px;border-bottom:0.5px solid var(--color-border-tertiary)">${poWH}</td>`;
+            // 入库仓库：从关联PR反查
+      const _poPR=DB.pr.find(function(x){return x.poId===r.id||x.poNo===r.no;});
+      const _poWH=_poPR?wname(_poPR.warehouseId):'-';
+      tr+=`<td style="font-size:11px;border-bottom:0.5px solid var(--color-border-tertiary)">${_poWH}</td>`;
+tr+=`<td style="border-bottom:0.5px solid var(--color-border-tertiary)"><span class="badge badge-${r.arriveStatus==='done'?'green':r.arriveStatus==='partial'?'amber':'blue'}">${r.arriveStatus==='done'?'全部到货':r.arriveStatus==='partial'?'部分到货':'未到货'}</span></td>`;
       tr+=`<td style="border-bottom:0.5px solid var(--color-border-tertiary)"><span class="badge badge-${r.approved?'green':'amber'}">${r.approved?'已审核':'待审核'}</span></td>`;
       tr+=`<td style="font-size:10px;border-bottom:0.5px solid var(--color-border-tertiary)">${r.remark||'-'}</td>`;
       tr+=`<td style="white-space:nowrap;border-bottom:0.5px solid var(--color-border-tertiary)">`+
@@ -3456,7 +3460,17 @@ function openBatchPRModal(preIds){
       <td style="padding:8px;font-size:12px;text-align:center">${itemCount}种</td>
     </tr>`;
   }).join('');
-  const whOpts = getWHOpts();
+  // 从勾选的SO获取默认仓库和经办人
+  const checkedSOs = preIds && preIds.length
+    ? preIds.map(id=>DB.so.find(s=>s.id===id)).filter(Boolean)
+    : DB.so.filter(s=>s.shipStatus!=='done').slice(0,3);
+  // 通过SD出库单反查仓库
+  const defaultSD = checkedSOs.length
+    ? DB.sd.find(function(sd){return checkedSOs.some(function(so){return sd.soId===so.id||sd.soNo===so.no;});})
+    : null;
+  const defaultWH = defaultSD ? _whName(defaultSD.warehouseId) : '';
+  const defaultHandler = checkedSOs.length && checkedSOs[0].handler ? checkedSOs[0].handler : '';
+  const whOpts = getWHOpts(defaultWH);
   mc.innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="modal" style="width:640px">
       <div class="modal-header"><span>📥 批量关联生成采购入库单</span><button class="btn" onclick="closeModal()">✕</button></div>
@@ -3471,7 +3485,7 @@ function openBatchPRModal(preIds){
           </div>
           <div class="form-group" style="flex:1;margin:0">
             <label style="font-size:11px">经办人</label>
-            <input id="batchPRHandler" type="text" placeholder="经办人姓名（可选）"
+            <input id="batchPRHandler" type="text" placeholder="经办人姓名（可选）" value="${defaultHandler}"
               style="font-size:12px;padding:6px 8px;border:0.5px solid var(--color-border-secondary);border-radius:4px;width:100%">
           </div>
           <div style="padding-top:18px">
@@ -3559,7 +3573,25 @@ function openBatchSDModal(preIds){
       <td style="padding:8px;text-align:center">${approvedBadge}</td>
     </tr>`;
   }).join('');
-  const whOpts = getWHOpts();
+  // 从勾选的SO里获取默认仓库和经办人
+  const _checkedSOs = (preIds&&preIds.length)
+    ? preIds.map(function(id){return DB.so.find(function(s){return s.id===id;});}).filter(Boolean)
+    : [];
+  // 通过 SD 出库单反查默认仓库
+  var _defWH = '';
+  var _defHandler = '';
+  if(_checkedSOs.length){
+    var _defSD = null;
+    for(var _ci=0;_ci<_checkedSOs.length;_ci++){
+      var _so = _checkedSOs[_ci];
+      _defSD = DB.sd.find(function(s){return s.soId===_so.id||s.soNo===_so.no;});
+      if(_defSD) break;
+    }
+    if(_defSD) _defWH = _whName(_defSD.warehouseId)||'';
+    // 经办人取第一张SO的经办人
+    if(_checkedSOs[0].handler) _defHandler = _checkedSOs[0].handler;
+  }
+  const whOpts = getWHOpts(_defWH);
   mc.innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="modal" style="width:640px">
       <div class="modal-header"><span>📤 批量关联生成销售出库单</span><button class="btn" onclick="closeModal()">✕</button></div>
@@ -3574,7 +3606,7 @@ function openBatchSDModal(preIds){
           </div>
           <div class="form-group" style="flex:1;margin:0">
             <label style="font-size:11px">经办人</label>
-            <input id="batchSDHandler" type="text" placeholder="经办人姓名（可选）"
+            <input id="batchSDHandler" type="text" placeholder="经办人姓名（可选）" value="${_defHandler}"
               style="font-size:12px;padding:6px 8px;border:0.5px solid var(--color-border-secondary);border-radius:4px;width:100%">
           </div>
           <div style="padding-top:18px">
@@ -5382,8 +5414,10 @@ function soApplyFilter(){
   var filtered=DB.so.filter(function(r){
     if(!_billMatchFilter(r,q,no,from,to,'',[])) return false;
     if(wh){
-      var sd=DB.sd.find(function(s){return s.soId===r.id||s.soNo===r.no;});
-      if(!sd||_whName(sd.warehouseId)!==wh) return false;
+      // 方案B：有出库记录且仓库不匹配时才过滤；没有出库记录的 SO 始终显示
+      var soSD = DB.sd.find(function(s){return s.soId===r.id||s.soNo===r.no;});
+      if(soSD && _whName(soSD.warehouseId) !== wh) return false;
+      // 没有 SD 出库单的 SO 不过滤，继续显示
     }
     return true;
   });
@@ -5929,6 +5963,18 @@ function autoFillCode(input){
     }
   }
 }
+
+
+
+init();
+
+
+
+
+
+init();
+
+
 
 
 
