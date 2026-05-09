@@ -1198,7 +1198,7 @@ function applySidebarMode(mode){
   if(!mode || mode==='auto'){
     document.body.removeAttribute('data-sidebar');
   } else {
-    document.body.setAttribute('data-sidebar', mode); // 'light' or 'dark'
+    document.body.setAttribute('data-sidebar', mode); // 'light' 或 'dark'
   }
 }
 
@@ -1333,7 +1333,7 @@ function changePasswordModal(){
   mc.innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal" style="width:360px"><div class="modal-header"><span>🔑 修改密码</span><button class="btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="form-group" style="margin-bottom:10px"><label>当前密码</label><input id="cpOld" type="password"></div><div class="form-group" style="margin-bottom:10px"><label>新密码（至少4位）</label><input id="cpNew" type="password"></div><div class="form-group"><label>确认新密码</label><input id="cpNew2" type="password"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="doChangePassword()">确认修改</button></div></div></div>`;
   document.body.appendChild(mc);mc.style.display='block';mc.style.pointerEvents='all';mc.style.zIndex='2147483647';
   document.body.style.overflow='hidden';
-  console.log('[viewBill] 弹窗已打开，mc.display='+mc.style.display+' innerHTML长度='+mc.innerHTML.length);
+  
 }
 
 async function doChangePassword(){
@@ -1432,7 +1432,7 @@ async function writeLog(action,module,detail){
       user_id:currentLoginUser.id,user_name:currentLoginUser.name,
       action,module,detail,created_at:new Date().toISOString()
     })});
-  }catch(e){console.warn('日志写入失败',e);}
+  }catch(e){console.warn('[日志写入失败]', e);}
 }
 
 async function renderLogs(){
@@ -1493,7 +1493,7 @@ function showToast(msg,type='success'){
   const t=document.getElementById('toast');
   const ic=document.getElementById('toastIcon');
   const tm=document.getElementById('toastMsg');
-  if(!t||!ic||!tm){console.log('[Toast]',type,msg);return;}
+  if(!t||!ic||!tm){console.log('[提示]',type,msg);return;}
   ic.textContent=type==='success'?'✓':type==='error'?'✕':'ℹ';
   t.style.borderColor=type==='success'?'#C0DD97':type==='error'?'#F7C1C1':'#B5D4F4';
   tm.textContent=msg;t.classList.add('show');
@@ -2815,7 +2815,7 @@ function makePOLine(containerId){
     </div>
   `;
   c.appendChild(div);
-  // Click outside to close dropdown
+  // 点击外部关闭下拉
   div.querySelector('.po-name-input').addEventListener('blur', function(){
     setTimeout(()=>{ const d=document.getElementById(lid+'_drop'); if(d)d.style.display='none'; }, 300);
   });
@@ -2985,7 +2985,7 @@ function poSelectProduct(pid, dropId){
   const infoEl = document.getElementById(lid+'_info');
   if(nameInput) nameInput.value = p.name + (p.spec?' '+p.spec:'');
   if(selectEl){
-    // ensure option exists
+    // 确保选项存在
     if(!selectEl.querySelector(`option[value="${p.id}"]`)){
       const opt = document.createElement('option');
       opt.value = p.id; opt.textContent = p.name;
@@ -3038,7 +3038,7 @@ function poConfirmNewProduct(lid){
   let code   = (document.getElementById(lid+'_nCode')||{}).value.trim();
   if(!name){showToast('产品名称不能为空','error');return;}
   if(!cat){showToast('请选择产品类别','error');return;}
-  // Auto generate code if empty
+  // 自动生成编号
   if(!code){
     const prefix = PO_CAT_PREFIX[cat]||'SP00';
     const existing = DB.products.filter(p=>p.code&&p.code.startsWith(prefix)).map(p=>parseInt(p.code.slice(prefix.length))||0);
@@ -3049,7 +3049,7 @@ function poConfirmNewProduct(lid){
   const newProd = {id:gid(),code,name,category:cat,spec,unit,costPrice:cost,salePrice:sale,safeQty:0,active:true};
   DB.products.push(newProd);
   saveStore('products');
-  // Auto select the new product in this line
+  // 自动选中新增商品
   const row = document.getElementById(lid+'_new').closest('.po-line-row');
   const nameInput = row ? row.querySelector('.po-name-input') : null;
   const selectEl = row ? row.querySelector('.pi-p') : null;
@@ -3109,7 +3109,7 @@ function savePR(){
   const items=getEditableItems('prLines');if(!items.length){showToast('请添加入库明细','error');return;}
   const poId=(document.getElementById('fpro')||{}).value;const poNo=poId?(DB.po.find(p=>p.id===poId)||{}).no:'';
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.pr.push({id:gid(),no:gno('PRK'),poId,poNo,supplierId,warehouseId,handler:(document.getElementById('fprh')||{}).value||'',date:(document.getElementById('fprd')||{}).value,items,totalAmt,status:'done'});
+  DB.pr.push({id:gid(),no:gno('PR'),poId,poNo,supplierId,warehouseId,handler:(document.getElementById('fprh')||{}).value||'',date:(document.getElementById('fprd')||{}).value,items,totalAmt,status:'done'});
   if(poId){const po=DB.po.find(p=>p.id===poId);if(po)po.arriveStatus='done';saveStore('po');}
   saveStore('pr');closeModal();renderPR();renderDashboard();writeLog('入库','采购','确认采购入库单');showToast('采购入库单已确认，库存已更新');
 }
@@ -3119,7 +3119,7 @@ function savePreturn(){
   if(!supplierId||!warehouseId){showToast('请选择供应商和仓库','error');return;}
   const items=getItems('ptLines');if(!items.length){showToast('请添加退货明细','error');return;}
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.preturn.push({id:gid(),no:gno('PTH'),supplierId,warehouseId,handler:(document.getElementById('fpth')||{}).value||'',date:(document.getElementById('fptd')||{}).value,remark:'',items,totalAmt,status:'done'});
+  DB.preturn.push({id:gid(),no:gno('PT'),supplierId,warehouseId,handler:(document.getElementById('fpth')||{}).value||'',date:(document.getElementById('fptd')||{}).value,remark:'',items,totalAmt,status:'done'});
   saveStore('preturn');closeModal();renderPT();renderDashboard();showToast('采购退货已确认，库存已更新');
 }
 
@@ -3138,7 +3138,7 @@ function saveSD(){
   for(const item of items){const s=getStock(item.productId,warehouseId);if(s<item.qty){showToast(`${pname(item.productId)} 库存不足！当前库存：${s}`,'error');return;}}
   const soId=(document.getElementById('fsdso')||{}).value;const soNo=soId?(DB.so.find(s=>s.id===soId)||{}).no:'';
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.sd.push({id:gid(),no:gno('SDK'),soId,soNo,customerId,handler:(document.getElementById('fsdh')||{}).value||'',warehouseId,date:(document.getElementById('fsdd')||{}).value,remark:(document.getElementById('fsdrm')||{}).value||'',items,totalAmt,status:'done'});
+  DB.sd.push({id:gid(),no:gno('SD'),soId,soNo,customerId,handler:(document.getElementById('fsdh')||{}).value||'',warehouseId,date:(document.getElementById('fsdd')||{}).value,remark:(document.getElementById('fsdrm')||{}).value||'',items,totalAmt,status:'done'});
   if(soId){const so=DB.so.find(s=>s.id===soId);if(so)so.shipStatus='done';saveStore('so');}
   saveStore('sd');closeModal();renderSD();renderDashboard();writeLog('出库','销售','确认销售出库');showToast('销售出库已确认，库存已更新');
 }
@@ -3148,7 +3148,7 @@ function saveSReturn(){
   if(!customerId||!warehouseId){showToast('请选择客户和仓库','error');return;}
   const items=getItems('srLines');if(!items.length){showToast('请添加退货明细','error');return;}
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.sreturn.push({id:gid(),no:gno('STH'),customerId,warehouseId,handler:(document.getElementById('fsrh')||{}).value||'',date:(document.getElementById('fsrd')||{}).value,remark:'',items,totalAmt,status:'done'});
+  DB.sreturn.push({id:gid(),no:gno('ST'),customerId,warehouseId,handler:(document.getElementById('fsrh')||{}).value||'',date:(document.getElementById('fsrd')||{}).value,remark:'',items,totalAmt,status:'done'});
   saveStore('sreturn');closeModal();renderSR();renderDashboard();showToast('销售退货已确认，库存已更新');
 }
 
@@ -3156,7 +3156,7 @@ function saveOtherIn(){
   const warehouseId=whId((document.getElementById('foiwh')||{}).value||'');if(!warehouseId){showToast('请选择仓库','error');return;}
   const items=getEditableItems('oiLines');if(!items.length){showToast('请添加明细','error');return;}
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.otherIn.push({id:gid(),no:gno('RKD'),type:(document.getElementById('foityp')||{}).value,warehouseId,handler:(document.getElementById('foih')||{}).value||'',date:(document.getElementById('foid')||{}).value,items,totalAmt,note:(document.getElementById('foin')||{}).value,status:'done'});
+  DB.otherIn.push({id:gid(),no:gno('OI'),type:(document.getElementById('foityp')||{}).value,warehouseId,handler:(document.getElementById('foih')||{}).value||'',date:(document.getElementById('foid')||{}).value,items,totalAmt,note:(document.getElementById('foin')||{}).value,status:'done'});
   saveStore('otherIn');closeModal();renderOI();renderDashboard();showToast('其他入库已确认');
 }
 
@@ -3556,7 +3556,7 @@ function execBatchPR(){
     const po = DB.po.find(p=>p.id===cb.value);
     if(!po||!po.items||!po.items.length) return;
     const totalAmt = po.items.reduce((s,i)=>s+(i.qty||0)*(i.price||0),0);
-    DB.pr.push({id:gid(),no:gno('PRK'),poId:po.id,poNo:po.no,supplierId:po.supplierId,
+    DB.pr.push({id:gid(),no:gno('PR'),poId:po.id,poNo:po.no,supplierId:po.supplierId,
       warehouseId,handler,date:today(),items:po.items.map(i=>({...i,total:(i.qty||0)*(i.price||0)})),
       totalAmt,status:'done'});
     po.arriveStatus='done';
@@ -3590,12 +3590,14 @@ function openBatchSDModal(preIds){
     </tr>`;
   }).join('');
   // 从勾选的SO里获取默认仓库和经办人
+  // 勾选的SO列表（有preIds用preIds，否则用全部待出库SO）
   const _checkedSOs = (preIds&&preIds.length)
     ? preIds.map(function(id){return DB.so.find(function(s){return s.id===id;});}).filter(Boolean)
-    : [];
-  // 通过 SD 出库单反查默认仓库
+    : pendingSOs.slice(0,1);
+  // 默认经办人：取第一张SO的经办人字段
   var _defWH = '';
-  var _defHandler = '';
+  var _defHandler = (_checkedSOs.length && _checkedSOs[0].handler) ? _checkedSOs[0].handler : '';
+  // 默认仓库：优先从关联SD出库单反查，没有SD则留空
   if(_checkedSOs.length){
     var _defSD = null;
     for(var _ci=0;_ci<_checkedSOs.length;_ci++){
@@ -3604,8 +3606,6 @@ function openBatchSDModal(preIds){
       if(_defSD) break;
     }
     if(_defSD) _defWH = _whName(_defSD.warehouseId)||'';
-    // 经办人取第一张SO的经办人
-    if(_checkedSOs[0].handler) _defHandler = _checkedSOs[0].handler;
   }
   const whOpts = getWHOpts(_defWH);
   mc.innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -3676,24 +3676,27 @@ function execBatchSD(){
   if(unapproved.length){
     if(!confirm(`有 ${unapproved.length} 张订单尚未审核，确定仍要生成出库单吗？`)) return;
   }
-  // 库存预检
+  // 库存预检：收集不足项，提示用户确认
+  const stockWarnings = [];
   for(const cb of checked){
     const so = DB.so.find(s=>s.id===cb.value);
     if(!so||!so.items) continue;
     for(const item of so.items){
       const stock = getStock(item.productId,warehouseId);
       if(stock < item.qty){
-        showToast(`${pname(item.productId)} 库存不足（需 ${item.qty}，现 ${stock}），请调整后重试`,'error');
-        return;
+        stockWarnings.push(`${pname(item.productId)}：需${item.qty}，现库存${stock}`);
       }
     }
+  }
+  if(stockWarnings.length){
+    if(!confirm(`以下商品库存不足，确定仍要生成出库单吗？\n\n`+stockWarnings.join('\n'))) return;
   }
   let count=0;
   checked.forEach(cb=>{
     const so = DB.so.find(s=>s.id===cb.value);
     if(!so||!so.items||!so.items.length) return;
     const totalAmt = so.items.reduce((s,i)=>s+(i.qty||0)*(i.price||0),0);
-    DB.sd.push({id:gid(),no:gno('SDK'),soId:so.id,soNo:so.no,customerId:so.customerId,
+    DB.sd.push({id:gid(),no:gno('SD'),soId:so.id,soNo:so.no,customerId:so.customerId,
       handler,warehouseId,date:today(),remark:'',
       items:so.items.map(i=>({...i,total:(i.qty||0)*(i.price||0)})),
       totalAmt,status:'done'});
@@ -3788,7 +3791,7 @@ function execBatchOI(){
     get total(){ return this.qty*this.price; }
   }));
   const totalAmt = items.reduce((s,i)=>s+i.qty*i.price,0);
-  DB.otherIn.push({id:gid(),no:gno('RKD'),type,warehouseId,handler,date:today(),
+  DB.otherIn.push({id:gid(),no:gno('OI'),type,warehouseId,handler,date:today(),
     items:items.map(i=>({productId:i.productId,qty:i.qty,price:i.price,total:i.qty*i.price})),
     totalAmt,note:validRows[0]?(validRows[0].querySelector('.boi-note')||{}).value||'':'',status:'done'});
   saveStore('otherIn');closeModal();renderOI();renderDashboard();
@@ -3801,7 +3804,7 @@ function saveOtherOut(){
   const items=getItems('ooLines');if(!items.length){showToast('请添加明细','error');return;}
   for(const item of items){const s=getStock(item.productId,warehouseId);if(s<item.qty){showToast(`${pname(item.productId)} 库存不足！当前库存：${s}`,'error');return;}}
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.otherOut.push({id:gid(),no:gno('CKD'),type:(document.getElementById('footyp')||{}).value,warehouseId,date:(document.getElementById('food')||{}).value,items,totalAmt,note:(document.getElementById('foon')||{}).value,status:'done'});
+  DB.otherOut.push({id:gid(),no:gno('OO'),type:(document.getElementById('footyp')||{}).value,warehouseId,date:(document.getElementById('food')||{}).value,items,totalAmt,note:(document.getElementById('foon')||{}).value,status:'done'});
   saveStore('otherOut');closeModal();renderOO();renderDashboard();showToast('其他出库已确认');
 }
 
@@ -4679,7 +4682,7 @@ async function saveBillEdit(type, id){
     writeLog('编辑', type, '编辑单据 '+r.no);
     showToast('✓ 修改已保存');
   }).catch(err=>{
-    console.error('保存失败:', err);
+    console.error('[保存失败]', err);
     showToast('⚠ 保存失败，请检查网络','error');
   });
 }
@@ -4863,7 +4866,7 @@ function editRemark(store, id, renderFn){
   </div>`;
   document.body.appendChild(mc);mc.style.display='block';mc.style.pointerEvents='all';mc.style.zIndex='2147483647';
   document.body.style.overflow='hidden';
-  // store renderFn reference
+  // 保存渲染函数引用
   document.getElementById('remarkInput').dataset.store = store;
   document.getElementById('remarkInput').dataset.id = id;
   window._remarkRenderFn = renderFn;
@@ -4873,7 +4876,7 @@ function saveRemark(store, id, renderFn){
   const r = DB[store].find(x=>x.id===id);
   if(!r) return;
   const val = (document.getElementById('remarkInput')||{}).value || '';
-  // support both remark and note fields
+  // 兼容 remark 和 note 字段
   if('note' in r) r.note = val;
   r.remark = val;
   saveStore(store);
@@ -5083,7 +5086,7 @@ async function init(){
     applySavedSettings();
 startPolling();
   }catch(e){
-    console.error('[云端连接失败]',e);
+    console.error('[云端连接失败]', e);
     const errMsg=e&&e.message?e.message.slice(0,80):String(e).slice(0,80);
     if(statusDot) statusDot.style.background='#E24B4A';
     if(dbInfoEl) dbInfoEl.textContent='⚠ 连接失败: '+errMsg;
@@ -5367,7 +5370,7 @@ function _renderSummary(elId, filtered){
     ' | 合计金额：' + fmtMoney(totalAmt);
 }
 
-// ── PO ApplyFilter ──
+// ── 采购订单筛选 ──
 function poApplyFilter(){
   // 填充供应商下拉
   var supSel=document.getElementById('poFltSup');
@@ -5390,7 +5393,7 @@ function poApplyFilter(){
 }
 function renderPO(){ poApplyFilter(); }
 
-// ── PR ApplyFilter ──
+// ── 采购入库筛选 ──
 function prApplyFilter(){
   _fillWhOpts('prFltWh');
     var q=(document.getElementById('prFltQ')||{}).value||'';
@@ -5406,7 +5409,7 @@ function prApplyFilter(){
 
 function renderPR(){ prApplyFilter(); }
 
-// ── SO ApplyFilter ──
+// ── 销售订单筛选 ──
 function soApplyFilter(){
   var whSel=document.getElementById('soFltWh');
   if(whSel&&whSel.options.length<=1){
@@ -5443,7 +5446,7 @@ function soApplyFilter(){
 }
 function renderSO(){ soApplyFilter(); }
 
-// ── SD ApplyFilter ──
+// ── 销售出库筛选 ──
 function sdApplyFilter(){
   _fillWhOpts('sdFltWh');
     var q=(document.getElementById('sdFltQ')||{}).value||'';
@@ -5459,7 +5462,7 @@ function sdApplyFilter(){
 
 function renderSD(){ sdApplyFilter(); }
 
-// ── OI ApplyFilter ──
+// ── 其他入库筛选 ──
 function oiApplyFilter(){
   _fillWhOpts('oiFltWh');
     var q=(document.getElementById('oiFltQ')||{}).value||'';
@@ -5475,7 +5478,7 @@ function oiApplyFilter(){
 
 function renderOI(){ oiApplyFilter(); }
 
-// ── OO ApplyFilter ──
+// ── 其他出库筛选 ──
 function ooApplyFilter(){
   _fillWhOpts('ooFltWh');
     var q=(document.getElementById('ooFltQ')||{}).value||'';
@@ -5515,7 +5518,7 @@ async function loadStore(storeName){
     if(res&&res.length&&res[0].data){
       if(Array.isArray(res[0].data)) DB[storeName]=res[0].data;
     }
-  }catch(e){console.warn('loadStore failed:',storeName,e);}
+  }catch(e){console.warn('[数据加载失败]', storeName, e);}
 }
 
 // ── 编辑 BOM ──
