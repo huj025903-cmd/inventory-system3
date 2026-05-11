@@ -3180,15 +3180,43 @@ function saveSO(){
 }
 
 function saveSD(){
-  const customerId=(document.getElementById('fsdc')||{}).value;const warehouseId=whId((document.getElementById('fsdw')||{}).value||'');
+  const _fsdwVal=(document.getElementById('fsdw')||{}).value||'';
+  const warehouseId=_fsdwVal?whId(_fsdwVal)||_fsdwVal:'';
+  const customerId=(document.getElementById('fsdc')||{}).value;
   if(!customerId||!warehouseId){showToast('请选择客户和仓库','error');return;}
-  const items=getEditableItems('sdLines');if(!items.length){showToast('请添加出库明细','error');return;}
-  for(const item of items){const s=getStock(item.productId,warehouseId);if(s<item.qty){showToast(`${pname(item.productId)} 库存不足！当前库存：${s}`,'error');return;}}
-  const soId=(document.getElementById('fsdso')||{}).value;const soNo=soId?(DB.so.find(s=>s.id===soId)||{}).no:'';
+  const items=getEditableItems('sdLines');
+  if(!items.length){showToast('请添加出库明细','error');return;}
+  // 库存预检：不足时提示确认，不强制拦截
+  const warnings=[];
+  for(const item of items){
+    const s=getStock(item.productId,warehouseId);
+    if(s<item.qty) warnings.push(pname(item.productId)+'：需'+item.qty+'，现库存'+s);
+  }
+  if(warnings.length){
+    if(!confirm('以下商品库存不足，确定仍要出库吗？\n\n'+warnings.join('\n'))) return;
+  }
+  const soId=(document.getElementById('fsdso')||{}).value;
+  const soNo=soId?(DB.so.find(s=>s.id===soId)||{}).no:'';
   const totalAmt=items.reduce((s,i)=>s+i.total,0);
-  DB.sd.push({id:gid(),no:gno('SD'),soId,soNo,customerId,handler:(document.getElementById('fsdh')||{}).value||'',warehouseId,date:(document.getElementById('fsdd')||{}).value,remark:(document.getElementById('fsdrm')||{}).value||'',items,totalAmt,status:'done'});
-  if(soId){const so=DB.so.find(s=>s.id===soId);if(so)so.shipStatus='done';saveStore('so');}
-  saveStore('sd');closeModal();renderSD();renderDashboard();writeLog('出库','销售','确认销售出库');showToast('销售出库已确认，库存已更新');
+  // 直接写入DB并保存
+  DB.sd.push({
+    id:gid(),no:gno('SD'),soId,soNo,customerId,
+    handler:(document.getElementById('fsdh')||{}).value||'',
+    warehouseId,
+    date:(document.getElementById('fsdd')||{}).value,
+    remark:(document.getElementById('fsdrm')||{}).value||'',
+    items,totalAmt,status:'done'
+  });
+  if(soId){
+    const so=DB.so.find(s=>s.id===soId);
+    if(so){so.shipStatus='done';saveStore('so');}
+  }
+  saveStore('sd');
+  closeModal();
+  renderSD();
+  renderDashboard();
+  writeLog('出库','销售','确认销售出库');
+  showToast('销售出库已确认，库存已更新','success');
 }
 
 function saveSReturn(){
