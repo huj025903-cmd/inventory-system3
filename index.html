@@ -161,7 +161,7 @@ body[data-sidebar="dark"] .sidebar{border-right:1px solid #2D3D55 !important}
 .btn-warning{background:#BA7517;color:#fff;border-color:#BA7517}
 
 .page{display:none;width:100%;}
-.page.active{display:block;width:100%;min-height:200px;}
+.page.active{display:block !important;width:100%;min-height:100px;}
 .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:14px;display:block;}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .card-title{font-size:12px;font-weight:500}
@@ -746,22 +746,45 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
       <!-- BOM -->
       <div class="page" id="page-bom">
         <div class="card">
-          <div class="card-header"><div class="card-title">产品BOM表</div><div style="display:flex;gap:6px"><button class="btn" onclick="batchPrint('bom')">🖨️ 批量打印</button><button class="btn btn-success" onclick="exportExcel('bom')">📊 导出Excel</button><button class="btn btn-primary" onclick="openModal('bom')">+ 新建</button></div>
+          <div class="card-header">
+            <div class="card-title">产品BOM表</div>
+            <div style="display:flex;gap:6px">
+              <button class="btn" onclick="batchPrint('bom')">🖨️ 批量打印</button>
+              <button class="btn btn-success" onclick="exportExcel('bom')">📊 导出Excel</button>
+              <button class="btn btn-primary" onclick="openModal('bom')">+ 新建</button>
+            </div>
+          </div>
           <div class="table-wrap">
-          <table<table><thead><tr><th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('bom',this)" title="全选"></th><th>成品编码</th><th>成品名称</th><th>版本</th><th>标准用量</th><th>物料数</th><th>状态</th><th>操作</th></tr></thead><tbody id="bomTbl"></tbody></table>
+            <table><thead><tr>
+              <th style="width:32px"><input type="checkbox" onclick="toggleAllCheck('bom',this)" title="全选"></th>
+              <th>成品编码</th><th>成品名称</th><th>版本</th><th>标准用量</th><th>物料数</th><th>状态</th><th>操作</th>
+            </tr></thead><tbody id="bomTbl"></tbody></table>
+          </div>
         </div>
       </div>
 
       <!-- 组装单 -->
       <div class="page" id="page-assembly">
         <div class="card">
-          <div class="card-header"><div class="card-title">组装单</div><div style="display:flex;gap:6px"><button class="btn btn-success" onclick="exportExcel('assembly')">📊 导出Excel</button><button class="btn btn-primary" onclick="openModal('assembly')">+ 新建</button></div></div>
-          <table><thead><tr><th>组装单号</th><th>成品</th><th>数量</th><th>物料出库仓库</th><th>成品入库仓库</th><th>经办人</th><th>日期</th><th>状态</th><th>备注</th><th>操作</th></tr></thead><tbody id="asmTbl"></tbody></table>
+          <div class="card-header">
+            <div class="card-title">组装单</div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-success" onclick="exportExcel('assembly')">📊 导出Excel</button>
+              <button class="btn btn-primary" onclick="openModal('assembly')">+ 新建</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr>
+              <th>组装单号</th><th>成品</th><th>数量</th>
+              <th>物料出库仓库</th><th>成品入库仓库</th>
+              <th>经办人</th><th>日期</th><th>状态</th><th>备注</th><th>操作</th>
+            </tr></thead><tbody id="asmTbl"></tbody></table>
+          </div>
         </div>
       </div>
 
       <!-- 库存查询 -->
-      <div class="page" id="page-stockQuery" style="min-height:600px">
+      <div class="page" id="page-stockQuery" style="min-height:600px;">
         <div class="card">
           <div class="card-header">
             <div class="card-title">📦 库存收发查询</div>
@@ -1717,6 +1740,12 @@ function nav(page){
   document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')===`nav('${page}')`)n.classList.add('active');});
   document.getElementById('pageTitle').textContent=PAGE_TITLES[page]||page;
   renderPage(page);
+  // 강제 reflow - 페이지 높이가 0인 경우 수정
+  var activePg = document.getElementById('page-'+page);
+  if(activePg && activePg.offsetHeight === 0){
+    activePg.style.minHeight = '100%';
+    activePg.style.height = 'auto';
+  }
 }
 
 function switchUser(){currentUser=document.getElementById('currentUser').value;updateNavVis();nav('dashboard');}
