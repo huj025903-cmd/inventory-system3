@@ -1675,12 +1675,25 @@ function _whName(widOrName){
   return w ? w.name : widOrName;
 }
 function getStock(pid, wid){
-  const wn = _whName(wid); // 统一转名称
+  // wid 가 이름이든 id 든 모두 처리: 이름으로 통일
+  const wn = _whName(wid)||wid;
+  // 추가로 원본 wid 도 비교 대상에 포함 (openstock 이 이름으로 저장된 경우)
   let q=0;
-  DB.openstock.forEach(s=>{if(s.productId===pid && _whName(s.warehouseId)===wn) q+=+s.qty||0;});
+  DB.openstock.forEach(s=>{
+    if(s.productId===pid){
+      const swn=_whName(s.warehouseId)||s.warehouseId;
+      if(swn===wn || s.warehouseId===wid || s.warehouseId===wn) q+=+s.qty||0;
+    }
+  });
   DB.pr.forEach(r=>{if(r.status==='done' && _whName(r.warehouseId)===wn) r.items&&r.items.forEach(i=>{if(i.productId===pid)q+=+i.qty||0;});});
   DB.preturn.forEach(r=>{if(r.status==='done' && _whName(r.warehouseId)===wn) r.items&&r.items.forEach(i=>{if(i.productId===pid)q-=+i.qty||0;});});
-  DB.sd.forEach(r=>{if(r.status==='done' && _whName(r.warehouseId)===wn) r.items&&r.items.forEach(i=>{if(i.productId===pid)q-=+i.qty||0;});});
+  DB.sd.forEach(r=>{
+    if(r.status==='done'){
+      const rwn=_whName(r.warehouseId)||r.warehouseId;
+      if(rwn===wn || r.warehouseId===wid || r.warehouseId===wn)
+        r.items&&r.items.forEach(i=>{if(i.productId===pid)q-=+i.qty||0;});
+    }
+  });
   DB.sreturn.forEach(r=>{if(r.status==='done' && _whName(r.warehouseId)===wn) r.items&&r.items.forEach(i=>{if(i.productId===pid)q+=+i.qty||0;});});
   DB.otherIn.forEach(r=>{if(r.status==='done' && _whName(r.warehouseId)===wn) r.items&&r.items.forEach(i=>{if(i.productId===pid)q+=+i.qty||0;});});
   DB.otherOut.forEach(r=>{if(r.status==='done' && _whName(r.warehouseId)===wn) r.items&&r.items.forEach(i=>{if(i.productId===pid)q-=+i.qty||0;});});
@@ -3180,8 +3193,8 @@ function saveSO(){
 }
 
 function saveSD(){
-  const _fsdwVal=(document.getElementById('fsdw')||{}).value||'';
-  const warehouseId=_fsdwVal?whId(_fsdwVal)||_fsdwVal:'';
+  // fsdw value = 창고 이름, 그대로 사용 (whId 변환 불필요)
+  const warehouseId=(document.getElementById('fsdw')||{}).value||'';
   const customerId=(document.getElementById('fsdc')||{}).value;
   if(!customerId||!warehouseId){showToast('请选择客户和仓库','error');return;}
   const items=getEditableItems('sdLines');
