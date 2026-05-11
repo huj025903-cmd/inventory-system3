@@ -6,6 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>进销存管理系统 v3.0-0509-0329</title>
 <style>
+/* 앱 레이아웃 기본 구조 */
+html,body{height:100%;margin:0;padding:0;}
+#app{height:100vh;display:flex;flex-direction:row;overflow:hidden;}
+.sidebar{flex-shrink:0;overflow-y:auto;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+.content{flex:1;overflow-y:auto;padding:16px;min-height:0;}
+
 :root,body{
   --color-background-primary:#FFFFFF;
   --color-background-secondary:#F5F5F3;
@@ -136,7 +143,7 @@ body[data-sidebar="dark"] .sidebar{border-right:1px solid #2D3D55 !important}
 .nav-item{padding:8px 16px;cursor:pointer;font-size:var(--sidebar-font-size,14px);color:var(--sidebar-text,var(--color-text-secondary));display:flex;align-items:center;gap:7px;border-left:2px solid transparent}
 .nav-item:hover{background:var(--sidebar-hover-bg,var(--color-background-secondary));color:var(--sidebar-text-active,var(--color-text-primary))}
 .nav-item.active{background:var(--sidebar-active-bg,var(--color-background-info));color:var(--sidebar-text-active,var(--color-text-info));border-left-color:#378ADD;font-weight:600}
-.main{flex:1;display:flex;flex-direction:column;overflow:auto}
+
 .topbar{height:46px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;padding:0 16px;gap:10px;justify-content:space-between}
 .topbar-title{font-size:13px;font-weight:500}
 .topbar-right{display:flex;gap:6px;align-items:center}
@@ -149,7 +156,7 @@ body[data-sidebar="dark"] .sidebar{border-right:1px solid #2D3D55 !important}
 .btn-success:hover{background:#3B6D11}
 .btn-danger{background:#E24B4A;color:#fff;border-color:#E24B4A}
 .btn-warning{background:#BA7517;color:#fff;border-color:#BA7517}
-.content{flex:1;overflow-y:auto;padding:16px}
+
 .page{display:none;width:100%;}
 .page.active{display:block;width:100%;min-height:200px;}
 .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:14px}
@@ -183,7 +190,7 @@ input:focus,select:focus{outline:none;border-color:#378ADD;box-shadow:0 0 0 2px 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:2147483647;pointer-events:all}
 .modal{background:#ffffff;border-radius:12px;border:none;width:560px;max-width:96%;max-height:88vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.35)}
 .modal-header{padding:14px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;background:#ffffff}
-.modal-body{padding:16px}
+.modal-
 .modal-footer{padding:12px 16px;border-top:1px solid #f0f0f0;display:flex;justify-content:flex-end;gap:8px;background:#ffffff}
 .alert{padding:7px 10px;border-radius:var(--border-radius-md);font-size:11px;margin-bottom:8px;display:flex;align-items:flex-start;gap:7px}
 .alert-warn{background:#FAEEDA;color:#854F0B;border:0.5px solid #FAC775}
@@ -250,7 +257,7 @@ input:focus,select:focus{outline:none;border-color:#378ADD;box-shadow:0 0 0 2px 
     background:var(--color-background-info);
   }
   /* 主内容区留出底部导航高度 */
-  .main{order:1;flex:1;overflow:auto;padding-bottom:56px}
+  
   /* 顶部栏精简 */
   .topbar{height:48px;padding:0 12px;gap:6px}
   .topbar-title{font-size:12px;font-weight:600}
@@ -258,7 +265,7 @@ input:focus,select:focus{outline:none;border-color:#378ADD;box-shadow:0 0 0 2px 
   #loginUserRole{display:none}
   .db-info-bar{display:none}
   /* 内容区域 */
-  .content{padding:10px}
+  
   /* 卡片 */
   .card{padding:10px;margin-bottom:10px}
   .card-header{flex-wrap:wrap;gap:6px}
@@ -325,7 +332,7 @@ input:focus,select:focus{outline:none;border-color:#378ADD;box-shadow:0 0 0 2px 
 
 input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-size:13px}
 
-@media(max-width:768px){.modal-body{padding:14px 16px}.form-group label{font-size:14px}.modal-header{font-size:15px}input,select,textarea{font-size:14px;padding:9px 11px;min-height:42px}}
+@media(max-width:768px){.modal-.form-group label{font-size:14px}.modal-header{font-size:15px}input,select,textarea{font-size:14px;padding:9px 11px;min-height:42px}}
 
 /* ══ 移动端表单全面升级 ══ */
 @media (max-width: 768px){
@@ -343,7 +350,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
     border-bottom:1px solid var(--color-border-tertiary);
     position:sticky;top:0;background:var(--color-background-primary);z-index:10;
   }
-  .modal-body{padding:16px 18px;overflow-y:auto}
+  .modal-
   .modal-footer{
     padding:12px 18px;
     position:sticky;bottom:0;
@@ -412,6 +419,9 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
 
 .table-wrap{overflow-x:auto;width:100%;}
 .table-wrap table{min-width:600px;}
+
+/* 메인 콘텐츠 영역 */
+
 </style>
 </head>
 <body data-theme="light">
@@ -769,7 +779,7 @@ input::placeholder,textarea::placeholder{color:var(--color-text-secondary);font-
               <button class="btn btn-success" onclick="exportSQExcel()" style="white-space:nowrap">📊 导出Excel</button>
             </div>
           </div>
-          <div id="sqSummary" style="display:none;margin:8px 0;padding:8px 12px;background:var(--color-background-secondary);border-radius:6px;font-size:11px;gap:20px;flex-wrap:wrap"></div>
+          <div id="sqSummary" style="display:flex;margin:8px 0;padding:8px 12px;background:var(--color-background-secondary);border-radius:6px;font-size:11px;gap:20px;flex-wrap:wrap;min-height:20px"></div>
           <div class="table-wrap">
             <table><thead>
   <tr>
@@ -5189,6 +5199,8 @@ function renderSQ(){
 
   const seen2=new Set();
   const dedupWHs=DB.warehouses.filter(w=>{if(seen2.has(w.name))return false;seen2.add(w.name);return true;});
+  // 창고가 없으면 기본 창고 하나 추가해서 상품이라도 표시
+  const whsToUse = dedupWHs.length ? dedupWHs : [{id:'',name:'默认仓库'}];
 
   const rows=[];
   filteredProds.forEach(p=>{
